@@ -69,6 +69,20 @@ namespace Hospital
       Assert.Equal(controlList, testList);
     }
 
+    [Fact]
+    public void Patient_CreateAppointment_CreatesAppointmentObjectForPatient()
+    {
+      Patient newPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      newPatient.Save();
+      Doctor newDoctor = new Doctor("Tom", "tom567", "567", "Cardiology");
+      newDoctor.Save();
+
+      Appointment testAppt = newPatient.CreateAppointment(new DateTime(2017, 06, 16, 15, 30, 00), newDoctor);
+      Appointment controlAppt = new Appointment(new DateTime(2017, 06, 16, 15, 30, 00), newDoctor.Id, newPatient.Id);
+
+      Assert.Equal(controlAppt, testAppt);
+    }
+
     public void Dispose()
     {
       Patient.DeleteAll();

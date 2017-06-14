@@ -177,6 +177,11 @@ namespace Hospital.Objects
       return doctors;
     }
 
+    public Appointment CreateAppointment(DateTime time, Doctor doctor)
+    {
+      return null;
+    }
+
     public static void DeleteAll()
     {
       DB.CreateConnection();
