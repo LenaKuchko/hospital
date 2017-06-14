@@ -134,6 +134,27 @@ namespace Hospital
       Assert.Equal(controlPatient, patient);
     }
 
+    [Fact]
+    public void Patient_DeleteDoctors_DeletesAllOfPatientsDoctors()
+    {
+      Patient patient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      patient.Save();
+
+      Doctor doctor1 = new Doctor("Tom", "tom567", "567", "Cardiology");
+      doctor1.Save();
+      Doctor doctor2 = new Doctor("John", "john567", "567", "Pediatrics");
+      doctor2.Save();
+
+      patient.AddDoctor(doctor1);
+      patient.AddDoctor(doctor2);
+      patient.DeleteDoctors();
+
+      List<Doctor> testList = patient.GetDoctors();
+      List<Doctor> controlList = new List<Doctor>{};
+
+      Assert.Equal(controlList, testList);
+    }
+
     public void Dispose()
     {
       Patient.DeleteAll();

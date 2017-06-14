@@ -13,12 +13,12 @@ namespace Hospital.Objects
     public DateTime DOB {get; set;}
 
     public Patient()
-     {
-       Id = 0;
-       Name = null;
-       UserName = null;
-       Password = null;
-       DOB = default(DateTime);
+    {
+      Id = 0;
+      Name = null;
+      UserName = null;
+      Password = null;
+      DOB = default(DateTime);
      }
 
     public Patient(string name, string userName, string password, DateTime dob, int id = 0)
@@ -272,11 +272,23 @@ namespace Hospital.Objects
         this.UserName = rdr.GetString(1);
         this.Password = rdr.GetString(2);
       }
-      
+
       if (rdr != null)
       {
         rdr.Close();
       }
+      DB.CloseConnection();
+    }
+
+    public void DeleteDoctors()
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM doctors_patients WHERE patient_id = @PatientId", DB.GetConnection());
+      cmd.Parameters.Add(new SqlParameter("@PatientId", this.Id));
+
+      cmd.ExecuteNonQuery();
       DB.CloseConnection();
     }
 
