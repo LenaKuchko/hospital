@@ -155,10 +155,90 @@ namespace Hospital
       Assert.Equal(controlList, testList);
     }
 
+    [Fact]
+    public void Patient_DeleteAppointment_DeletesAllOfPatientAppointments()
+    {
+      Doctor doctor = new Doctor("Tom", "tom567", "567", "Cardiology");
+      doctor.Save();
+      Patient patient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      patient.Save();
+
+      Appointment controlAppointment1 = new Appointment(new DateTime(2017, 06, 25), doctor.Id, patient.Id, "Yearly physical");
+      Appointment controlAppointment2 = new Appointment(new DateTime(2017, 05, 21), doctor.Id, patient.Id, "Yearly physical");
+
+      patient.DeleteAppointments();
+      List<Appointment> testList = patient.GetAppointments();
+      List<Appointment> controlList = new List<Appointment>{};
+
+      Assert.Equal(testList, controlList);
+    }
+
+    [Fact]
+    public void Patient_DeleteAppointment_DeletesSingleAppointment()
+    {
+      Doctor newDoctor = new Doctor("Tom", "tom567", "567", "Cardiology");
+      newDoctor.Save();
+      Patient newPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      newPatient.Save();
+      Appointment appointment1 = new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id, "Yearly physical");
+      appointment1.Save();
+      Appointment appointment2 = new Appointment(new DateTime(2017, 06, 21), newDoctor.Id, newPatient.Id, "Yearly physical");
+      appointment2.Save();
+
+      newPatient.DeleteSingleAppointment(appointment1);
+
+      List<Appointment> testList = newPatient.GetAppointments();
+      List<Appointment> controlList = new List<Appointment>{appointment2};
+
+      Assert.Equal(controlList, testList);
+    }
+
+    [Fact]
+    public void Patient_DeleteDoctorRelationship_DeletesRelationship()
+    {
+      Patient patient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      patient.Save();
+      Doctor doctor1 = new Doctor("Tom", "tom567", "567", "Cardiology");
+      doctor1.Save();
+      Doctor doctor2 = new Doctor("John", "john567", "567", "Pediatrics");
+      doctor2.Save();
+
+      patient.AddDoctor(doctor1);
+      patient.AddDoctor(doctor2);
+      patient.DeleteDoctorRelationship(doctor1);
+
+      List<Doctor> testList = patient.GetDoctors();
+      List<Doctor> controlList = new List<Doctor>{doctor2};
+
+      Assert.Equal(controlList, testList);
+    }
+
+    [Fact]
+    public void Patient_GetMissedAppointments_ReturnsAllMissedAppointments()
+    {
+      DateTime now = new DateTime(2017, 06, 22);
+      Doctor newDoctor = new Doctor("Tom", "tom567", "567", "Cardiology");
+      newDoctor.Save();
+      Patient newPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      newPatient.Save();
+      newPatient.CreateAppointment(new DateTime(2017, 05, 21), newDoctor, "Yearly physical");
+      newPatient.CreateAppointment(new DateTime(2017, 05, 26), newDoctor, "Heart check");
+      newPatient.CreateAppointment(new DateTime(2017, 06, 25), newDoctor, "Vaccination");
+      Console.WriteLine(now);
+      List<Appointment> testList = newPatient.GetMissedAppointments(now);
+      List<Appointment> controlList = new List<Appointment>
+      { new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id, "Yearly physical", newPatient.GetAppointments()[0].Id),
+        new Appointment(new DateTime(2017, 05, 26), newDoctor.Id, newPatient.Id, "Heart check", newPatient.GetAppointments()[1].Id)
+      };
+
+      Assert.Equal(controlList, testList);
+    }
+
     public void Dispose()
     {
       Patient.DeleteAll();
       Appointment.DeleteAll();
+      Doctor.DeleteAll();
     }
   }
 }

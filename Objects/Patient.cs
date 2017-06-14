@@ -292,6 +292,76 @@ namespace Hospital.Objects
       DB.CloseConnection();
     }
 
+    public void DeleteAppointments()
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM appointments WHERE patient_id = @PatientId", DB.GetConnection());
+
+      cmd.Parameters.Add(new SqlParameter("@PatientId", this.Id));
+      cmd.ExecuteNonQuery();
+      DB.CloseConnection();
+    }
+
+    public void DeleteSingleAppointment(Appointment toDelete)
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM appointments WHERE id = @AppointmentId;", DB.GetConnection());
+
+      cmd.Parameters.Add(new SqlParameter("@AppointmentId", toDelete.Id));
+      cmd.ExecuteNonQuery();
+      DB.CloseConnection();
+    }
+
+    public void DeleteDoctorRelationship(Doctor toDelete)
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM doctors_patients WHERE doctor_id = @DoctorId;", DB.GetConnection());
+
+      cmd.Parameters.Add(new SqlParameter("@DoctorId", toDelete.Id));
+      cmd.ExecuteNonQuery();
+      DB.CloseConnection();
+    }
+
+    public List<Appointment> GetMissedAppointments(DateTime now)
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM appointments WHERE patient_id = @PatientId AND date < @CurrentDate;", DB.GetConnection());
+
+      cmd.Parameters.Add(new SqlParameter("@PatientId", this.Id));
+      cmd.Parameters.Add(new SqlParameter("@CurrentDate", now));
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Appointment> missedAppointments = new List<Appointment>{};
+      while(rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        DateTime date = rdr.GetDateTime(1);
+        int patientId = rdr.GetInt32(2);
+        int doctorId = rdr.GetInt32(3);
+        string description = rdr.GetString(4);
+
+        Appointment newAppointment = new Appointment(date, doctorId, patientId, description, id);
+        missedAppointments.Add(newAppointment);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      DB.CloseConnection();
+
+      return missedAppointments;
+    }
+
     public static void DeleteAll()
     {
       DB.CreateConnection();

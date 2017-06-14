@@ -136,6 +136,47 @@ namespace Hospital
       Assert.Equal(controlDoctor, doctor);
     }
 
+    [Fact]
+    public void Doctor_DeletePatients_DeletesAllOfDoctorsPatients()
+    {
+      Doctor doctor = new Doctor("Tom", "tom567", "567", "Cardiology");
+      doctor.Save();
+      Patient patient1 = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      patient1.Save();
+      Patient patient2 = new Patient("Tom", "john123", "123", new DateTime(1996, 04, 25));
+      patient2.Save();
+
+
+      doctor.AddPatient(patient1);
+      doctor.AddPatient(patient2);
+      doctor.DeletePatients();
+
+      List<Patient> testList = doctor.GetPatients();
+      List<Patient> controlList = new List<Patient>{};
+
+      Assert.Equal(controlList, testList);
+    }
+
+    [Fact]
+    public void Doctor_DeletePatientRelationship_DeletesRelationship()
+    {
+      Doctor doctor = new Doctor("Tom", "tom567", "567", "Cardiology");
+      doctor.Save();
+      Patient patient1 = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      patient1.Save();
+      Patient patient2 = new Patient("Tom", "john123", "123", new DateTime(1996, 04, 25));
+      patient2.Save();
+
+      doctor.AddPatient(patient1);
+      doctor.AddPatient(patient2);
+      doctor.DeletePatientRelationship(patient1);
+
+      List<Patient> testList = doctor.GetPatients();
+      List<Patient> controlList = new List<Patient>{patient2};
+
+      Assert.Equal(controlList, testList);
+    }
+
     public void Dispose()
     {
       Doctor.DeleteAll();

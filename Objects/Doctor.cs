@@ -282,6 +282,30 @@ namespace Hospital.Objects
       DB.CloseConnection();
     }
 
+    public void DeletePatients()
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM doctors_patients WHERE doctor_id = @DoctorId", DB.GetConnection());
+      cmd.Parameters.Add(new SqlParameter("@DoctorId", this.Id));
+
+      cmd.ExecuteNonQuery();
+      DB.CloseConnection();
+    }
+
+    public void DeletePatientRelationship(Patient toDelete)
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM doctors_patients WHERE patient_id = @PatientId;", DB.GetConnection());
+
+      cmd.Parameters.Add(new SqlParameter("@PatientId", toDelete.Id));
+      cmd.ExecuteNonQuery();
+      DB.CloseConnection();
+    }
+
     public static void DeleteAll()
     {
       DB.CreateConnection();

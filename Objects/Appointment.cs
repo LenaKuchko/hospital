@@ -131,17 +131,17 @@ namespace Hospital.Objects
       return foundAppointment;
     }
 
-    public void DeleteSingleAppointment()
-    {
-      DB.CreateConnection();
-      DB.OpenConnection();
-
-      SqlCommand cmd = new SqlCommand("DELETE FROM appointments WHERE id = @AppointmentId;", DB.GetConnection());
-
-      cmd.Parameters.Add(new SqlParameter("@AppointmentId", this.Id));
-      cmd.ExecuteNonQuery();
-      DB.CloseConnection();
-    }
+    // public void DeleteSingleAppointment()
+    // {
+    //   DB.CreateConnection();
+    //   DB.OpenConnection();
+    //
+    //   SqlCommand cmd = new SqlCommand("DELETE FROM appointments WHERE id = @AppointmentId;", DB.GetConnection());
+    //
+    //   cmd.Parameters.Add(new SqlParameter("@AppointmentId", this.Id));
+    //   cmd.ExecuteNonQuery();
+    //   DB.CloseConnection();
+    // }
 
     public static void DeleteAll()
     {
