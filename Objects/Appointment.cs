@@ -83,7 +83,6 @@ namespace Hospital.Objects
       cmd.Parameters.Add(new SqlParameter("@Date", this.Date));
       cmd.Parameters.Add(new SqlParameter("@PatientId", this.PatientId));
       cmd.Parameters.Add(new SqlParameter("@DoctorId", this.DoctorId));
-      Console.WriteLine(this.Date);
 
       SqlDataReader rdr = cmd.ExecuteReader();
       while(rdr.Read())

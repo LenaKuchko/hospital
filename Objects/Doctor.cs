@@ -131,6 +131,52 @@ namespace Hospital.Objects
       return foundDoctor;
     }
 
+    public void AddPatient(Patient patientToAdd)
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("INSERT INTO doctors_patients (doctor_id, patient_id) VALUES (@DoctorId, @PatientId);", DB.GetConnection());
+      cmd.Parameters.Add(new SqlParameter("@DoctorId", this.Id));
+      cmd.Parameters.Add(new SqlParameter("@PatientId", patientToAdd.Id));
+
+      cmd.ExecuteNonQuery();
+
+      DB.CloseConnection();
+    }
+
+    public List<Patient> GetPatients()
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("SELECT patients.* FROM doctors JOIN doctors_patients ON (doctors.id = doctors_patients.doctor_id) JOIN patients ON (patients.id = doctors_patients.patient_id) WHERE doctor_id = @DoctorId;", DB.GetConnection());
+      cmd.Parameters.Add(new SqlParameter("@DoctorId", this.Id));
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Patient> patients = new List<Patient>{};
+      while(rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        string name = rdr.GetString(1);
+        string userName = rdr.GetString(2);
+        string password = rdr.GetString(3);
+        DateTime dob = rdr.GetDateTime(4);
+
+        Patient newPatient = new Patient(name, userName, password, dob, id);
+        patients.Add(newPatient);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      DB.CloseConnection();
+
+      return patients;
+    }
+
     public static void DeleteAll()
     {
       DB.CreateConnection();
