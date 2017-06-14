@@ -252,6 +252,36 @@ namespace Hospital.Objects
       DB.CloseConnection();
     }
 
+    public void Update(string name, string username, string password, string specialty)
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("UPDATE doctors SET name = @DoctorName, username = @DoctorUsername, password = @DoctorPassword, specialty = @DoctorSpecialty OUTPUT INSERTED.name, INSERTED.username, INSERTED.password, INSERTED.specialty WHERE id = @DoctorId;", DB.GetConnection());
+
+      cmd.Parameters.Add(new SqlParameter("@DoctorName", name));
+      cmd.Parameters.Add(new SqlParameter("@DoctorUsername", username));
+      cmd.Parameters.Add(new SqlParameter("@DoctorPassword", password));
+      cmd.Parameters.Add(new SqlParameter("@DoctorSpecialty", specialty));
+      cmd.Parameters.Add(new SqlParameter("@DoctorId", this.Id));
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      while(rdr.Read())
+      {
+        this.Name = rdr.GetString(0);
+        this.UserName = rdr.GetString(1);
+        this.Password = rdr.GetString(2);
+        this.Specialty = rdr.GetString(3);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      DB.CloseConnection();
+    }
+
     public static void DeleteAll()
     {
       DB.CreateConnection();

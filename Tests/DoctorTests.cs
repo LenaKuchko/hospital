@@ -123,6 +123,19 @@ namespace Hospital
       Assert.Equal(controlList, testList);
     }
 
+    [Fact]
+    public void Doctor_Update_UpdateDoctorInfo()
+    {
+      Doctor doctor = new Doctor("John", "john567", "567", "Physician");
+      doctor.Save();
+
+      doctor.Update("Tom", "tom567", "123", "Cardiology");
+
+      Doctor controlDoctor = new Doctor("Tom", "tom567", "123", "Cardiology", doctor.Id);
+
+      Assert.Equal(controlDoctor, doctor);
+    }
+
     public void Dispose()
     {
       Doctor.DeleteAll();
