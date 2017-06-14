@@ -12,6 +12,14 @@ namespace Hospital.Objects
     public string Password {get; set;}
     public DateTime DOB {get; set;}
 
+    public Patient()
+     {
+       Id = 0;
+       Name = null;
+       UserName = null;
+       Password = null;
+       DOB = default(DateTime);
+     }
 
     public Patient(string name, string userName, string password, DateTime dob, int id = 0)
     {
@@ -91,6 +99,36 @@ namespace Hospital.Objects
         rdr.Close();
       }
       DB.CloseConnection();
+    }
+
+    public static Patient Find(int searchId)
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM patients WHERE id = @PatientId;", DB.GetConnection());
+
+      cmd.Parameters.Add(new SqlParameter("@PatientId", searchId));
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      Patient foundPatient = new Patient();
+      while (rdr.Read())
+      {
+        foundPatient.Id = rdr.GetInt32(0);
+        foundPatient.Name = rdr.GetString(1);
+        foundPatient.UserName = rdr.GetString(2);
+        foundPatient.Password = rdr.GetString(3);
+        foundPatient.DOB = rdr.GetDateTime(4);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      DB.CloseConnection();
+
+      return foundPatient;
     }
 
     public static void DeleteAll()

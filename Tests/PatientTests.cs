@@ -25,20 +25,31 @@ namespace Hospital
     }
 
     [Fact]
-     public void Patient_Save_SaveToDatabase()
-     {
-       Patient newPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
-       newPatient.Save();
+    public void Patient_Save_SaveToDatabase()
+    {
+      Patient newPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      newPatient.Save();
 
-       Patient testPatient = Patient.GetAll()[0];
-       Assert.Equal(newPatient, testPatient);
-     }
+      Patient testPatient = Patient.GetAll()[0];
+      Assert.Equal(newPatient, testPatient);
+    }
 
-     [Fact]
+    [Fact]
     public void Patient_Equals_PatientEqualsPatient()
     {
       Patient controlPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
       Patient testPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+
+      Assert.Equal(controlPatient, testPatient);
+    }
+
+    [Fact]
+    public void Patient_Find_FindsPatientInDB()
+    {
+      Patient controlPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      controlPatient.Save();
+
+      Patient testPatient = Patient.Find(controlPatient.Id);
 
       Assert.Equal(controlPatient, testPatient);
     }
