@@ -240,12 +240,24 @@ namespace Hospital.Objects
       return matches;
     }
 
+    public void DeleteSinglePatient()
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM patients WHERE id = @PatientId; DELETE FROM doctors_patients WHERE patient_id = @PatientId; DELETE FROM appointments WHERE patient_id = @PatientId;", DB.GetConnection());
+
+      cmd.Parameters.Add(new SqlParameter("@PatientId", this.Id));
+      cmd.ExecuteNonQuery();
+      DB.CloseConnection();
+    }
+
     public static void DeleteAll()
     {
       DB.CreateConnection();
       DB.OpenConnection();
 
-      SqlCommand cmd = new SqlCommand("DELETE FROM patients;", DB.GetConnection());
+      SqlCommand cmd = new SqlCommand("DELETE FROM patients; DELETE FROM doctors_patients; DELETE FROM appointments;", DB.GetConnection());
       cmd.ExecuteNonQuery();
       DB.CloseConnection();
     }

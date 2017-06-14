@@ -89,6 +89,40 @@ namespace Hospital
       Assert.Equal(controlList, testList);
     }
 
+    [Fact]
+    public void Doctor_SearchBySpecialty_ReturnsAllMatches()
+    {
+      Doctor doctor1 = new Doctor("John", "tom567", "567", "Physician");
+      doctor1.Save();
+      Doctor doctor2 = new Doctor("John", "tom567", "567", "Cardiology");
+      doctor2.Save();
+      Doctor doctor3 = new Doctor("John", "tom567", "567", "Pediatrician");
+      doctor3.Save();
+      Doctor doctor4 = new Doctor("John", "tom567", "567", "physician");
+      doctor4.Save();
+
+      List<Doctor> testList = Doctor.SearchBySpecialty("PHYSICIAN");
+      List<Doctor> controlList = new List<Doctor>{doctor1, doctor4};
+
+      Assert.Equal(controlList, testList);
+    }
+
+    [Fact]
+    public void Doctor_Delete_DeletesSingleDoctor()
+    {
+      Doctor doctor1 = new Doctor("John", "tom567", "567", "Physician");
+      doctor1.Save();
+      Doctor doctor2 = new Doctor("John", "tom567", "567", "Cardiology");
+      doctor2.Save();
+
+      doctor1.DeleteSingleDoctor();
+
+      List<Doctor> testList = Doctor.GetAll();
+      List<Doctor> controlList = new List<Doctor>{doctor2};
+
+      Assert.Equal(controlList, testList);
+    }
+
     public void Dispose()
     {
       Doctor.DeleteAll();

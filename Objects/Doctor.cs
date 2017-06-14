@@ -208,12 +208,55 @@ namespace Hospital.Objects
       return matches;
     }
 
+    public static List<Doctor> SearchBySpecialty(string searchQuery)
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM doctors WHERE specialty LIKE @SearchQuery", DB.GetConnection());
+      cmd.Parameters.Add(new SqlParameter("@SearchQuery", "%" + searchQuery + "%"));
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Doctor> matches = new List<Doctor>{};
+      while (rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        string name = rdr.GetString(1);
+        string username = rdr.GetString(2);
+        string password = rdr.GetString(3);
+        string specialty = rdr.GetString(4);
+        Doctor newDoctor = new Doctor(name, username, password, specialty, id);
+        matches.Add(newDoctor);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      DB.CloseConnection();
+
+      return matches;
+    }
+
+    public void DeleteSingleDoctor()
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("DELETE FROM doctors WHERE id = @DoctorId; DELETE FROM doctors_patients WHERE doctor_id = @DoctorId; DELETE FROM appointments WHERE doctor_id = @DoctorId;", DB.GetConnection());
+
+      cmd.Parameters.Add(new SqlParameter("@DoctorId", this.Id));
+      cmd.ExecuteNonQuery();
+      DB.CloseConnection();
+    }
+
     public static void DeleteAll()
     {
       DB.CreateConnection();
       DB.OpenConnection();
 
-      SqlCommand cmd = new SqlCommand("DELETE FROM doctors;", DB.GetConnection());
+      SqlCommand cmd = new SqlCommand("DELETE FROM doctors; DELETE FROM doctors_patients; DELETE FROM appointments;", DB.GetConnection());
       cmd.ExecuteNonQuery();
       DB.CloseConnection();
     }
