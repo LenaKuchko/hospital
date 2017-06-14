@@ -76,16 +76,39 @@ namespace Hospital
       newPatient.Save();
       Doctor newDoctor = new Doctor("Tom", "tom567", "567", "Cardiology");
       newDoctor.Save();
+      newPatient.CreateAppointment(new DateTime(2017, 06, 16, 15, 30, 00), newDoctor, "Yearly physical");
 
-      Appointment testAppt = newPatient.CreateAppointment(new DateTime(2017, 06, 16, 15, 30, 00), newDoctor);
-      Appointment controlAppt = new Appointment(new DateTime(2017, 06, 16, 15, 30, 00), newDoctor.Id, newPatient.Id);
+      List<Appointment> testList = newPatient.GetAppointments();
+      List<Appointment> controlList = new List<Appointment>{new Appointment(new DateTime(2017, 06, 16, 15, 30, 00), newDoctor.Id, newPatient.Id, "Yearly physical", newPatient.GetAppointments()[0].Id)};
 
-      Assert.Equal(controlAppt, testAppt);
+
+      Assert.Equal(controlList, testList);
+    }
+
+    [Fact]
+    public void Patient_SearchByName_ReturnsAllMatches()
+    {
+      Patient patient1 = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      patient1.Save();
+      Patient patient2 = new Patient("Johnathan", "john123", "123", new DateTime(1996, 04, 25));
+      patient2.Save();
+      Patient patient3 = new Patient("john", "john123", "123", new DateTime(1996, 04, 25));
+      patient3.Save();
+      Patient patient4 = new Patient("JOHNNY", "john123", "123", new DateTime(1996, 04, 25));
+      patient4.Save();
+      Patient patient5 = new Patient("Samuel", "john123", "123", new DateTime(1996, 04, 25));
+      patient5.Save();
+
+      List<Patient> testList = Patient.SearchByName("john");
+      List<Patient> controlList = new List<Patient>{patient1, patient2, patient3, patient4};
+
+      Assert.Equal(controlList, testList);
     }
 
     public void Dispose()
     {
       Patient.DeleteAll();
+      Appointment.DeleteAll();
     }
   }
 }

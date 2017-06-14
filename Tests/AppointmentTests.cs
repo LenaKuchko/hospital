@@ -31,7 +31,7 @@ namespace Hospital
       newDoctor.Save();
       Patient newPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
       newPatient.Save();
-      Appointment newAppointment = new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id);
+      Appointment newAppointment = new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id, "Yearly physical");
       newAppointment.Save();
 
       Appointment testAppointment = Appointment.GetAll()[0];
@@ -45,8 +45,8 @@ namespace Hospital
       newDoctor.Save();
       Patient newPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
       newPatient.Save();
-      Appointment controlAppointment = new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id);
-      Appointment testAppointment = new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id);
+      Appointment controlAppointment = new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id, "Yearly physical");
+      Appointment testAppointment = new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id, "Yearly physical");
 
       Assert.Equal(controlAppointment, testAppointment);
     }
@@ -58,7 +58,7 @@ namespace Hospital
       newDoctor.Save();
       Patient newPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
       newPatient.Save();
-      Appointment controlAppointment = new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id);
+      Appointment controlAppointment = new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id, "Yearly physical");
       controlAppointment.Save();
 
       Appointment testAppointment = Appointment.Find(controlAppointment.Id);

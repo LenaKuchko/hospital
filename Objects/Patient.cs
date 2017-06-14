@@ -177,9 +177,67 @@ namespace Hospital.Objects
       return doctors;
     }
 
-    public Appointment CreateAppointment(DateTime time, Doctor doctor)
+    public void CreateAppointment(DateTime time, Doctor doctor, string description)
     {
-      return null;
+      Appointment newAppointment = new Appointment(time, doctor.Id, this.Id, description);
+      newAppointment.Save();
+    }
+
+    public List<Appointment> GetAppointments()
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM appointments WHERE patient_id = @PatientId", DB.GetConnection());
+      cmd.Parameters.Add(new SqlParameter("@PatientId", this.Id));
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Appointment> appointments = new List<Appointment>{};
+      while (rdr.Read())
+      {
+        Appointment newAppointment = new Appointment(rdr.GetDateTime(1), rdr.GetInt32(3), rdr.GetInt32(2), rdr.GetString(4), rdr.GetInt32(0));
+        appointments.Add(newAppointment);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      DB.CloseConnection();
+
+      return appointments;
+    }
+
+    public static List<Patient> SearchByName(string searchQuery)
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM patients WHERE name LIKE @SearchQuery", DB.GetConnection());
+      cmd.Parameters.Add(new SqlParameter("@SearchQuery", "%" + searchQuery + "%"));
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Patient> matches = new List<Patient>{};
+      while (rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        string name = rdr.GetString(1);
+        string username = rdr.GetString(2);
+        string password = rdr.GetString(3);
+        DateTime dob = rdr.GetDateTime(4);
+        Patient newPatient = new Patient(name, username, password, dob, id);
+        matches.Add(newPatient);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      DB.CloseConnection();
+
+      return matches;
     }
 
     public static void DeleteAll()

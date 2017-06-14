@@ -10,6 +10,7 @@ namespace Hospital.Objects
     public int PatientId {get; set;}
     public int DoctorId {get; set;}
     public DateTime Date {get; set;}
+    public string Description {get; set;}
 
 
     public Appointment()
@@ -18,14 +19,16 @@ namespace Hospital.Objects
       PatientId = 0;
       DoctorId = 0;
       Date = default(DateTime);
+      Description = null;
      }
 
-    public Appointment(DateTime date, int doctorId, int patientId, int id = 0)
+    public Appointment(DateTime date, int doctorId, int patientId, string description, int id = 0)
     {
       Id = id;
       DoctorId = doctorId;
       PatientId = patientId;
       Date = date;
+      Description = description;
     }
 
     public override bool Equals(System.Object otherAppointment)
@@ -40,7 +43,8 @@ namespace Hospital.Objects
         return (this.Id == newAppointment.Id &&
                 this.PatientId == newAppointment.PatientId &&
                 this.DoctorId == newAppointment.DoctorId &&
-                this.Date == newAppointment.Date);
+                this.Date == newAppointment.Date &&
+                this.Description == newAppointment.Description);
       }
     }
 
@@ -59,8 +63,9 @@ namespace Hospital.Objects
         DateTime date = rdr.GetDateTime(1);
         int patientId = rdr.GetInt32(2);
         int doctorId = rdr.GetInt32(3);
+        string description = rdr.GetString(4);
 
-        Appointment newAppointment = new Appointment(date, doctorId, patientId, id);
+        Appointment newAppointment = new Appointment(date, doctorId, patientId, description, id);
         allAppointments.Add(newAppointment);
       }
 
@@ -78,11 +83,12 @@ namespace Hospital.Objects
       DB.CreateConnection();
       DB.OpenConnection();
 
-      SqlCommand cmd = new SqlCommand("INSERT INTO appointments (date, patient_id, doctor_id) OUTPUT INSERTED.id VALUES (@Date, @PatientId, @DoctorId);", DB.GetConnection());
+      SqlCommand cmd = new SqlCommand("INSERT INTO appointments (date, patient_id, doctor_id, description) OUTPUT INSERTED.id VALUES (@Date, @PatientId, @DoctorId, @Description);", DB.GetConnection());
 
       cmd.Parameters.Add(new SqlParameter("@Date", this.Date));
       cmd.Parameters.Add(new SqlParameter("@PatientId", this.PatientId));
       cmd.Parameters.Add(new SqlParameter("@DoctorId", this.DoctorId));
+      cmd.Parameters.Add(new SqlParameter("@Description", this.Description));
 
       SqlDataReader rdr = cmd.ExecuteReader();
       while(rdr.Read())
@@ -114,6 +120,7 @@ namespace Hospital.Objects
         foundAppointment.Date = rdr.GetDateTime(1);
         foundAppointment.PatientId = rdr.GetInt32(2);
         foundAppointment.DoctorId = rdr.GetInt32(3);
+        foundAppointment.Description = rdr.GetString(4);
       }
 
       if (rdr != null)
