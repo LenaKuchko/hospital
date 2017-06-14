@@ -6,6 +6,7 @@ namespace Hospital.Objects
 {
   public class Doctor
   {
+    // static proerties to act as doctor password?
     public int Id {get; set;}
     public string Name {get; set;}
     public string UserName {get; set;}

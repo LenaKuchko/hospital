@@ -121,6 +121,19 @@ namespace Hospital
       Assert.Equal(controlList, testList);
     }
 
+    [Fact]
+    public void Patient_Update_UpdatePatientInfo()
+    {
+      Patient patient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      patient.Save();
+
+      patient.Update("Tom", "tom123", "123");
+
+      Patient controlPatient = new Patient("Tom", "tom123", "123", new DateTime(1996, 04, 25), patient.Id);
+
+      Assert.Equal(controlPatient, patient);
+    }
+
     public void Dispose()
     {
       Patient.DeleteAll();
