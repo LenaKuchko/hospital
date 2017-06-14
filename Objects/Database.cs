@@ -1,7 +1,7 @@
 using System.Data.SqlClient;
 using System.Data;
 
-namespace University.Objects
+namespace Hospital.Objects
 {
   public class DB
   {
@@ -11,7 +11,7 @@ namespace University.Objects
     {
       return _conn;
     }
-    
+
     public static void CreateConnection()
     {
       _conn = new SqlConnection(DBConfiguration.ConnectionString);
