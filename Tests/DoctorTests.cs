@@ -69,6 +69,26 @@ namespace Hospital
       Assert.Equal(controlList, testList);
     }
 
+    [Fact]
+    public void Doctor_SearchByName_ReturnsAllMatches()
+    {
+      Doctor doctor1 = new Doctor("John", "tom567", "567", "Cardiology");
+      doctor1.Save();
+      Doctor doctor2 = new Doctor("Johnathan", "tom567", "567", "Cardiology");
+      doctor2.Save();
+      Doctor doctor3 = new Doctor("john", "tom567", "567", "Cardiology");
+      doctor3.Save();
+      Doctor doctor4 = new Doctor("JOHNNY", "tom567", "567", "Cardiology");
+      doctor4.Save();
+      Doctor doctor5 = new Doctor("Samuel", "tom567", "567", "Cardiology");
+      doctor5.Save();
+
+      List<Doctor> testList = Doctor.SearchByName("john");
+      List<Doctor> controlList = new List<Doctor>{doctor1, doctor2, doctor3, doctor4};
+
+      Assert.Equal(controlList, testList);
+    }
+
     public void Dispose()
     {
       Doctor.DeleteAll();

@@ -177,6 +177,37 @@ namespace Hospital.Objects
       return patients;
     }
 
+    public static List<Doctor> SearchByName(string searchQuery)
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM doctors WHERE name LIKE @SearchQuery", DB.GetConnection());
+      cmd.Parameters.Add(new SqlParameter("@SearchQuery", "%" + searchQuery + "%"));
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Doctor> matches = new List<Doctor>{};
+      while (rdr.Read())
+      {
+        int id = rdr.GetInt32(0);
+        string name = rdr.GetString(1);
+        string username = rdr.GetString(2);
+        string password = rdr.GetString(3);
+        string specialty = rdr.GetString(4);
+        Doctor newDoctor = new Doctor(name, username, password, specialty, id);
+        matches.Add(newDoctor);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      DB.CloseConnection();
+
+      return matches;
+    }
+
     public static void DeleteAll()
     {
       DB.CreateConnection();
