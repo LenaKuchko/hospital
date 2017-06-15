@@ -137,23 +137,15 @@ namespace Hospital
     [Fact]
     public void Patient_Login_ReturnsTrue()
     {
-      Patient patient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
-      patient.Save();
+      Patient patient1 = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      patient1.Save();
+      Patient patient2 = new Patient("Tom", "tom123", "12323", new DateTime(1996, 04, 25));
+      patient2.Save();
 
-      bool testBool = patient.Login("john123", "123");
+      List<Patient> testList = Patient.Login("john123", "123");
+      List<Patient> controlList = new List<Patient>{patient1};
 
-      Assert.Equal(true, testBool);
-    }
-
-    [Fact]
-    public void Patient_Login_ReturnsFalse()
-    {
-      Patient patient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
-      patient.Save();
-
-      bool testBool = patient.Login("tom", "567890");
-
-      Assert.Equal(false, testBool);
+      Assert.Equal(controlList, testList);
     }
 
     [Fact]
@@ -246,7 +238,6 @@ namespace Hospital
       newPatient.CreateAppointment(new DateTime(2017, 05, 21), newDoctor, "Yearly physical");
       newPatient.CreateAppointment(new DateTime(2017, 05, 26), newDoctor, "Heart check");
       newPatient.CreateAppointment(new DateTime(2017, 06, 25), newDoctor, "Vaccination");
-      Console.WriteLine(now);
       List<Appointment> testList = newPatient.GetMissedAppointments(now);
       List<Appointment> controlList = new List<Appointment>
       { new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id, "Yearly physical", newPatient.GetAppointments()[0].Id),

@@ -20,6 +20,9 @@ namespace Hospital
         newDoctor.Save();
         return View["doctor_login.cshtml", newDoctor];
       };
+      // Get["/doctors/login"] = _ => {
+      //
+      // };
     }
   }
 }

@@ -139,23 +139,15 @@ namespace Hospital
     [Fact]
     public void Doctor_Login_ReturnsTrue()
     {
-      Doctor doctor = new Doctor("Tom", "tom567", "567", "Cardiology");
-      doctor.Save();
+      Doctor doctor1 = new Doctor("Tom", "tom567", "567", "Cardiology");
+      doctor1.Save();
+      Doctor doctor2 = new Doctor("John", "john567", "567", "Cardiology");
+      doctor2.Save();
 
-      bool testBool = doctor.Login("tom567", "567");
+      List<Doctor> testList = Doctor.Login("john567", "567");
+      List<Doctor> controlList = new List<Doctor>{doctor2};
 
-      Assert.Equal(true, testBool);
-    }
-
-    [Fact]
-    public void Doctor_Login_ReturnsFalse()
-    {
-      Doctor doctor = new Doctor("Tom", "tom567", "567", "Cardiology");
-      doctor.Save();
-
-      bool testBool = doctor.Login("tom", "567890");
-
-      Assert.Equal(false, testBool);
+      Assert.Equal(controlList, testList);
     }
 
     [Fact]

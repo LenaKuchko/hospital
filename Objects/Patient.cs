@@ -280,23 +280,27 @@ namespace Hospital.Objects
       DB.CloseConnection();
     }
 
-    public bool Login(string username, string password)
+    public static List<Patient> Login(string username, string password)
     {
       DB.CreateConnection();
       DB.OpenConnection();
 
-      SqlCommand cmd = new SqlCommand("SELECT * FROM patients WHERE id = @PatientId", DB.GetConnection());
-      cmd.Parameters.Add(new SqlParameter("@PatientId", this.Id));
+      SqlCommand cmd = new SqlCommand("SELECT * FROM patients WHERE username = @PatientUsername AND password = @PatientPassword;", DB.GetConnection());
+      cmd.Parameters.Add(new SqlParameter("@PatientUsername", username));
+      cmd.Parameters.Add(new SqlParameter("@PatientPassword", password));
 
       SqlDataReader rdr = cmd.ExecuteReader();
 
-      string patientUsername = null;
-      string patientPassword = null;
-
+      List<Patient> loggedIn = new List<Patient>{};
       while(rdr.Read())
       {
-        patientUsername = rdr.GetString(2);
-        patientPassword = rdr.GetString(3);
+        int id = rdr.GetInt32(0);
+        string PatientName = rdr.GetString(1);
+        string PatientUsername = rdr.GetString(2);
+        string PatientPassword = rdr.GetString(3);
+        DateTime PatientDOB = rdr.GetDateTime(4);
+        Patient newPatient = new Patient(PatientName, PatientUsername, PatientPassword, PatientDOB, id);
+        loggedIn.Add(newPatient);
       }
 
       if (rdr != null)
@@ -305,7 +309,7 @@ namespace Hospital.Objects
       }
       DB.CloseConnection();
 
-      return (patientUsername == username && patientPassword == password);
+      return loggedIn;
     }
 
     public void DeleteDoctors()
