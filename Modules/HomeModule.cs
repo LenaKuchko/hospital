@@ -35,6 +35,7 @@ namespace Hospital
           model.Add("doctor", loggedIn[0]);
           model.Add("appointments", loggedIn[0].GetAppointments());
           model.Add("patients", loggedIn[0].GetPatients());
+          // model.Add("patients-delete", false);
           return View["doctor.cshtml", model];
         }
       };
@@ -96,6 +97,32 @@ namespace Hospital
         model.Add("appointments", selectedPatient.GetAppointments());
         model.Add("patient-doctors", selectedPatient.GetDoctors());
         return View["patient.cshtml", model];
+      };
+      Get["/doctors/{id}/patients/delete"] = parameters => {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        Doctor selectedDoctor = Doctor.Find(parameters.id);
+        model.Add("doctor", selectedDoctor);
+        model.Add("appointments", selectedDoctor.GetAppointments());
+        model.Add("patients", selectedDoctor.GetPatients());
+        model.Add("patients-delete", true);
+        return View["doctor.cshtml", model];
+      };
+      Delete["/doctors/{id}/patients/delete"] = parameters => {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        Doctor selectedDoctor = Doctor.Find(parameters.id);
+        string patients = Request.Form["patient"];
+        if(patients != null)
+        {
+          string[] values = patients.Split(',');
+          foreach(string patientId in values)
+          {
+            selectedDoctor.DeletePatientRelationship(Patient.Find(int.Parse(patientId)));
+          }
+        }
+        model.Add("doctor", selectedDoctor);
+        model.Add("appointments", selectedDoctor.GetAppointments());
+        model.Add("patients", selectedDoctor.GetPatients());
+        return View["doctor.cshtml", model];
       };
     }
   }

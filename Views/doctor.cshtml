@@ -6,19 +6,40 @@
 <hr>
 <div class="row">
   <div class="col-sm-6">
-    <h3>Patients</h3>
     @if(@Model["patients"].Count == 0)
     {
+      <h3>Patients</h3>
       <h3>You do not have any patients</h3>
     }
     else
     {
-      <ul>
-        @foreach(var patient in @Model["patients"])
-        {
-          <li>Patient Name: @patient.Name, Date of Birth: @patient.DOB</li>
-        }
-      </ul>
+      @if(!(Model.ContainsKey("patients-delete")))
+      {
+        <form action='/doctors/@Model["doctor"].Id/patients/delete' method="get">
+          <button type="submit" class="btn btn-primary">Edit patients</button>
+        </form>
+        <h3>Patients</h3>
+        <ul>
+          @foreach(var patient in @Model["patients"])
+          {
+            <h4>Patient Name: @patient.Name, Date of Birth: @patient.DOB.ToString("d")</h4>
+          }
+        </ul>
+      }
+      @if(Model.ContainsKey("patients-delete"))
+      {
+      <form action='/doctors/@Model["doctor"].Id/patients/delete' method="post">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn btn-danger">Delete selected patients</button>
+        <h3>Patients</h3>
+        <ul>
+          @foreach(var patient in @Model["patients"])
+          {
+            <h4><input type="checkbox" name="patient" value="@patient.Id"> Patient Name: @patient.Name, Date of Birth: @patient.DOB.ToString("d")</h4>
+          }
+        </ul>
+      </form>
+      }
     }
   </div>
   <div class="col-sm-6">
@@ -32,7 +53,7 @@
       <ul>
         @foreach(var appointment in @Model["appointments"])
         {
-          <li>Date: appointment.Date, with @appointment.GetPatientName()</li>
+          <h4>Date: @appointment.Date.ToString("d"), with @appointment.GetPatientName()</h4>
         }
       </ul>
     }
