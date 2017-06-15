@@ -2,7 +2,7 @@
   Layout = "Shared/_Layout.cshtml";
 }
 
-<h1 class="text-center">Welcome, @Model["patient"].Name!</h1>
+<h1 class="text-center">Welcome, @Model["patient"].Name! <form class="inline-form" action='/patients/@Model["patient"].Id/update'><button type="submit" class="btn btn-xs btn-default">Edit</button></form></h1>
 <hr>
 <div class="row">
   <div class="col-sm-5">

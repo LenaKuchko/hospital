@@ -124,6 +124,19 @@ namespace Hospital
         model.Add("patients", selectedDoctor.GetPatients());
         return View["doctor.cshtml", model];
       };
+      Get["/patients/{id}/update"] = parameters => {
+        Patient selectedPatient = Patient.Find(parameters.id);
+        return View["patient_update_form.cshtml", selectedPatient];
+      };
+      Patch["/patients/{id}/update"] = parameters => {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        Patient selectedPatient = Patient.Find(parameters.id);
+        selectedPatient.Update(Request.Form["name"], Request.Form["username"], Request.Form["password"]);
+        model.Add("patient", selectedPatient);
+        model.Add("appointments", selectedPatient.GetAppointments());
+        model.Add("patient-doctors", selectedPatient.GetDoctors());
+        return View["patient.cshtml", model];
+      };
     }
   }
 }
