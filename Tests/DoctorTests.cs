@@ -151,6 +151,21 @@ namespace Hospital
     }
 
     [Fact]
+    public void Doctor_GetAppointments_ReturnsAllAppointments()
+    {
+      Patient newPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      newPatient.Save();
+      Doctor newDoctor = new Doctor("Tom", "tom567", "567", "Cardiology");
+      newDoctor.Save();
+      newPatient.CreateAppointment(new DateTime(2017, 06, 16, 15, 30, 00), newDoctor, "Yearly physical");
+
+      List<Appointment> testList = newDoctor.GetAppointments();
+      List<Appointment> controlList = new List<Appointment>{new Appointment(new DateTime(2017, 06, 16, 15, 30, 00), newDoctor.Id, newPatient.Id, "Yearly physical", newPatient.GetAppointments()[0].Id)};
+
+      Assert.Equal(controlList, testList);
+    }
+
+    [Fact]
     public void Doctor_DeletePatients_DeletesAllOfDoctorsPatients()
     {
       Doctor doctor = new Doctor("Tom", "tom567", "567", "Cardiology");

@@ -240,6 +240,32 @@ namespace Hospital.Objects
       return matches;
     }
 
+    public List<Appointment> GetAppointments()
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM appointments WHERE doctor_id = @DoctorId", DB.GetConnection());
+      cmd.Parameters.Add(new SqlParameter("@DoctorId", this.Id));
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      List<Appointment> appointments = new List<Appointment>{};
+      while (rdr.Read())
+      {
+        Appointment newAppointment = new Appointment(rdr.GetDateTime(1), rdr.GetInt32(3), rdr.GetInt32(2), rdr.GetString(4), rdr.GetInt32(0));
+        appointments.Add(newAppointment);
+      }
+
+      if (rdr != null)
+      {
+        rdr.Close();
+      }
+      DB.CloseConnection();
+
+      return appointments;
+    }
+
     public void DeleteSingleDoctor()
     {
       DB.CreateConnection();

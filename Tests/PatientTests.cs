@@ -81,7 +81,6 @@ namespace Hospital
       List<Appointment> testList = newPatient.GetAppointments();
       List<Appointment> controlList = new List<Appointment>{new Appointment(new DateTime(2017, 06, 16, 15, 30, 00), newDoctor.Id, newPatient.Id, "Yearly physical", newPatient.GetAppointments()[0].Id)};
 
-
       Assert.Equal(controlList, testList);
     }
 

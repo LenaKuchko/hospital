@@ -66,7 +66,35 @@ namespace Hospital
       Assert.Equal(controlAppointment, testAppointment);
     }
 
-    
+    [Fact]
+    public void Appointment_GetDoctorName_ReturnsNameOfDoctor()
+    {
+      Doctor newDoctor = new Doctor("Tom", "tom567", "567", "Cardiology");
+      newDoctor.Save();
+      Patient newPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      newPatient.Save();
+      Appointment newAppointment = new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id, "Yearly physical");
+      newAppointment.Save();
+
+      string doctor = newAppointment.GetDoctorName();
+
+      Assert.Equal("Tom", doctor);
+    }
+
+    [Fact]
+    public void Appointment_GetPatientName_ReturnsNameOfPatient()
+    {
+      Doctor newDoctor = new Doctor("Tom", "tom567", "567", "Cardiology");
+      newDoctor.Save();
+      Patient newPatient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      newPatient.Save();
+      Appointment newAppointment = new Appointment(new DateTime(2017, 05, 21), newDoctor.Id, newPatient.Id, "Yearly physical");
+      newAppointment.Save();
+
+      string patient = newAppointment.GetPatientName();
+
+      Assert.Equal("John", patient);
+    }
 
     public void Dispose()
     {

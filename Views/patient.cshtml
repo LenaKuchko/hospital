@@ -1,0 +1,40 @@
+@{
+  Layout = "Shared/_Layout.cshtml";
+}
+
+<h1 class="text-center">Welcome, @Model["patient"].Name!</h1>
+<hr>
+<div class="row">
+  <div class="col-sm-6">
+    <h3>Care team</h3>
+    @if(@Model["doctors"].Count == 0)
+    {
+      <h3>You do not have any doctors</h3>
+    }
+    else
+    {
+      <ul>
+        @foreach(var doctor in @Model["doctors"])
+        {
+          <li>Doctor Name: @doctor.Name, Specialty: @doctor.Specialty</li>
+        }
+      </ul>
+    }
+  </div>
+  <div class="col-sm-6">
+    <h3>Appointments</h3>
+    @if(@Model["appointments"].Count == 0)
+    {
+      <h3>You do not have any appointments</h3>
+    }
+    else
+    {
+      <ul>
+        @foreach(var appointment in @Model["appointments"])
+        {
+          <li>Date: appointment.Date, with @appointment.GetDoctorName()</li>
+        }
+      </ul>
+    }
+  </div>
+</div>

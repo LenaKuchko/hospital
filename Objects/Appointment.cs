@@ -131,6 +131,16 @@ namespace Hospital.Objects
       return foundAppointment;
     }
 
+    public string GetDoctorName()
+    {
+      return Doctor.Find(this.DoctorId).Name;
+    }
+
+    public string GetPatientName()
+    {
+      return Patient.Find(this.PatientId).Name;
+    }
+
     public static void DeleteAll()
     {
       DB.CreateConnection();
