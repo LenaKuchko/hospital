@@ -135,6 +135,28 @@ namespace Hospital
     }
 
     [Fact]
+    public void Patient_Login_ReturnsTrue()
+    {
+      Patient patient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      patient.Save();
+
+      bool testBool = patient.Login("john123", "123");
+
+      Assert.Equal(true, testBool);
+    }
+
+    [Fact]
+    public void Patient_Login_ReturnsFalse()
+    {
+      Patient patient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));
+      patient.Save();
+
+      bool testBool = patient.Login("tom", "567890");
+
+      Assert.Equal(false, testBool);
+    }
+
+    [Fact]
     public void Patient_DeleteDoctors_DeletesAllOfPatientsDoctors()
     {
       Patient patient = new Patient("John", "john123", "123", new DateTime(1996, 04, 25));

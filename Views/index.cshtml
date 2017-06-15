@@ -1,3 +1,15 @@
 @{
   Layout = "Shared/_Layout.cshtml";
 }
+<div class="row">
+  <div class="col-xs-6">
+    <form action="/doctors" method="get">
+      <button class="btn btn-info" type="submit" name="button">Doctors</button>
+    </form>
+  </div>
+  <div class="col-xs-6">
+    <form action="/patients" method="get">
+      <button class="btn btn-info"  type="submit" name="button">Patients</button>
+    </form>
+  </div>
+</div>

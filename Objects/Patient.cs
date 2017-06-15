@@ -280,6 +280,34 @@ namespace Hospital.Objects
       DB.CloseConnection();
     }
 
+    public bool Login(string username, string password)
+    {
+      DB.CreateConnection();
+      DB.OpenConnection();
+
+      SqlCommand cmd = new SqlCommand("SELECT * FROM patients WHERE id = @PatientId", DB.GetConnection());
+      cmd.Parameters.Add(new SqlParameter("@PatientId", this.Id));
+
+      SqlDataReader rdr = cmd.ExecuteReader();
+
+      string patientUsername = null;
+      string patientPassword = null;
+
+      while(rdr.Read())
+      {
+        patientUsername = rdr.GetString(2);
+        patientPassword = rdr.GetString(3);
+      }
+
+      if (rdr != null)
+      {
+          rdr.Close();
+      }
+      DB.CloseConnection();
+
+      return (patientUsername == username && patientPassword == password);
+    }
+
     public void DeleteDoctors()
     {
       DB.CreateConnection();
