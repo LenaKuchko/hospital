@@ -108,6 +108,26 @@ namespace Hospital
     }
 
     [Fact]
+    public void Doctor_CombineSearch_ReturnsAllMatches()
+    {
+      Doctor doctor1 = new Doctor("Johnny", "tom567", "567", "Physician");
+      doctor1.Save();
+      Doctor doctor2 = new Doctor("John", "tom567", "567", "Cardiology");
+      doctor2.Save();
+      Doctor doctor3 = new Doctor("John", "tom567", "567", "Pediatrician");
+      doctor3.Save();
+      Doctor doctor4 = new Doctor("John", "tom567", "567", "physician");
+      doctor4.Save();
+      Doctor doctor5 = new Doctor("john", "tom567", "567", "physician's assistant");
+      doctor5.Save();
+
+      List<Doctor> testList = Doctor.CombineSearch("john", "PHYSICIAN");
+      List<Doctor> controlList = new List<Doctor>{doctor1, doctor4, doctor5};
+
+      Assert.Equal(controlList, testList);
+    }
+
+    [Fact]
     public void Doctor_Delete_DeletesSingleDoctor()
     {
       Doctor doctor1 = new Doctor("John", "tom567", "567", "Physician");
