@@ -5,7 +5,7 @@
 <h2 class="text-center">Select your doctor</h2>
 <form action='/patients/@Model["patient-id"]/doctors/added' method="post">
   <div class="form-group">
-    <label for="">Select your doctor:</label>
+    <label>Select your doctor:</label>
     <select name="selected-doctor" class="form-control" required>
         @foreach(var doctor in @Model["all-doctors"])
         {
@@ -29,3 +29,29 @@
   </div>
   <button type="submit" class="btn btn-info">Select doctor</button>
 </form>
+
+<h2 class="text-center">Search for a doctor</h2>
+<form action='/patients/@Model["patient-id"]/search/doctors' method="get">
+  <div class="form-group">
+    <label>Specialty:</label>
+    <input type="text" name="specialty-search" class="form-control">
+  </div>
+  <div class="form-group">
+    <label>Name:</label>
+    <div class="input-group">
+      <input type="text" name="name-search" class="form-control">
+      <span class="input-group-btn">
+        <button type="submit" class="btn btn-primary">Search &#128269;</button>
+      </span>
+    </div>
+  </div>
+</form>
+
+@if(@Model.ContainsKey("show-results"))
+{
+  <h3>Your search returned @Model["results"].Count result<span>@if(Model["results"].Count != 1){<span>s</span>}</span>@if(@Model["results"].Count > 0){<span>:</span>}</h3>
+  @foreach(var doctor in Model["results"])
+  {
+    <h4>@doctor.Name <form action='/patients/@Model["patient-id"]/doctors/added' method="post"><input type="hidden" name="selected-doctor" value="@doctor.Id"><button type="submit" class="btn btn-default btn-xs">Add to care team</button></form></h4>
+  }
+}

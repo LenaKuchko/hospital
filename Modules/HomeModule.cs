@@ -137,6 +137,31 @@ namespace Hospital
         model.Add("patient-doctors", selectedPatient.GetDoctors());
         return View["patient.cshtml", model];
       };
+      Get["/patients/{id}/search/doctors"] = parameters => {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        Patient selectedPatient = Patient.Find(parameters.id);
+        string nameQuery = Request.Query["name-search"];
+        string specialtyQuery = Request.Query["specialty-search"];
+        List<Doctor> results = new List<Doctor>{};
+        if(nameQuery != "" && specialtyQuery != "")
+        {
+          results = Doctor.CombineSearch(nameQuery, specialtyQuery);
+        }
+        else if(nameQuery != "")
+        {
+          results = Doctor.SearchByName(nameQuery);
+        }
+        else
+        {
+          results = Doctor.SearchBySpecialty(specialtyQuery);
+        }
+        model.Add("patient-id", parameters.id);
+        model.Add("patient-doctors", Patient.Find(parameters.id).GetDoctors());
+        model.Add("all-doctors", Doctor.GetAll());
+        model.Add("show-results", true);
+        model.Add("results", results);
+        return View["choose_doctor_form.cshtml", model];
+      };
     }
   }
 }
