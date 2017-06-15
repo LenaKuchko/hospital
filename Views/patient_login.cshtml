@@ -27,7 +27,10 @@
 
     @if(@Model != null)
     {
-      <h3>@Model["newPatient"].Name, your account has been created!</h3>
+      @if(@Model.ContainsKey("newPatient"))
+      {
+        <h3>@Model["newPatient"].Name, your account has been created!</h3>
+      }
     }
 
   </div>
@@ -45,4 +48,12 @@
       <button class="btn btn-info" type="submit" name="button">Sign in</button>
     </form>
   </div>
+
+  @if(@Model != null)
+  {
+    @if(@Model.ContainsKey("login-status") && !(Model["login-status"]))
+    {
+      <h3>Invalid username or password</h3>
+    }
+  }
 </div>
