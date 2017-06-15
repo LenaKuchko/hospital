@@ -21,7 +21,7 @@
       </ul>
     }
   </div>
-  <div class="col-sm-6">
+  <div class="col-sm-5">
     <h3>Appointments</h3>
     @if(@Model["appointments"].Count == 0)
     {
@@ -32,9 +32,14 @@
       <ul>
         @foreach(var appointment in @Model["appointments"])
         {
-          <li>Date: appointment.Date, with @appointment.GetDoctorName()</li>
+          <li>Date: @appointment.Date.ToString("d"), with @appointment.GetDoctorName()</li>
         }
       </ul>
     }
+  </div>
+  <div class="col-sm-1">
+    <form action='/patients/@Model["patient"].Id/appointments/new' method="get">
+      <button type="submit" name="button">Add appt</button>
+    </form>
   </div>
 </div>

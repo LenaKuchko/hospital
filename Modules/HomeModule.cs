@@ -64,6 +64,22 @@ namespace Hospital
           return View["patient.cshtml", model];
         }
       };
+      Get["/patients/{id}/appointments/new"] = parameters => {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        List<Doctor> allDoctors = Doctor.GetAll();
+        model.Add("patient-id", parameters.id);
+        model.Add("doctors", Patient.Find(parameters.id).GetDoctors());
+        return View["appointment_form.cshtml", model];
+      };
+      Post["/patients/{id}/appointments/added"] = parameters => {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        Patient selectedPatient = Patient.Find(parameters.id);
+        selectedPatient.CreateAppointment(Request.Form["date"], Doctor.Find(Request.Form["doctor"]), Request.Form["description"]);
+        model.Add("patient", selectedPatient);
+        model.Add("appointments", selectedPatient.GetAppointments());
+        model.Add("doctors", selectedPatient.GetDoctors());
+        return View["patient.cshtml", model];
+      };
     }
   }
 }
