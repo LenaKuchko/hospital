@@ -5,21 +5,26 @@
 <h1 class="text-center">Welcome, @Model["patient"].Name!</h1>
 <hr>
 <div class="row">
-  <div class="col-sm-6">
+  <div class="col-sm-5">
     <h3>Care team</h3>
-    @if(@Model["doctors"].Count == 0)
+    @if(@Model["patient-doctors"].Count == 0)
     {
       <h3>You do not have any doctors</h3>
     }
     else
     {
       <ul>
-        @foreach(var doctor in @Model["doctors"])
+        @foreach(var doctor in @Model["patient-doctors"])
         {
           <li>Doctor Name: @doctor.Name, Specialty: @doctor.Specialty</li>
         }
       </ul>
     }
+  </div>
+  <div class="col-sm-1">
+    <form action='/patients/@Model["patient"].Id/doctors/choose' method="get">
+      <button type="submit" name="button" class="btn btn-primary">Choose doctor</button>
+    </form>
   </div>
   <div class="col-sm-5">
     <h3>Appointments</h3>

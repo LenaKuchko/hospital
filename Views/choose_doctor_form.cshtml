@@ -1,0 +1,31 @@
+@{
+  Layout = "Shared/_Layout.cshtml";
+}
+<!-- //model needs list of all doctors as well as doctors of this patient -->
+<h2 class="text-center">Select your doctor</h2>
+<form action='/patients/@Model["patient-id"]/doctors/added' method="post">
+  <div class="form-group">
+    <label for="">Select your doctor:</label>
+    <select name="selected-doctor" class="form-control" required>
+        @foreach(var doctor in @Model["all-doctors"])
+        {
+          @if(@Model["patient-doctors"].Count != 0)
+          {
+            @foreach(var checkDoctor in @Model["patient-doctors"])
+            {
+              @if(!@Model["patient-doctors"].Contains(doctor))
+              {
+                <option value="@doctor.Id">@doctor.Name</option>
+                @{break;}
+              }
+            }
+          }
+          else
+          {
+            <option value="@doctor.Id">@doctor.Name</option>
+          }
+        }
+      </select>
+  </div>
+  <button type="submit" class="btn btn-info">Select doctor</button>
+</form>

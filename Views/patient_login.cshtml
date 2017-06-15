@@ -8,19 +8,19 @@
     <form action="/patients/new" method="post">
       <div class="form-group">
         <label>Username</label>
-        <input class="form-control" type="text" name="username">
+        <input class="form-control" type="text" name="username" required>
       </div>
       <div class="form-group">
         <label>Password</label>
-        <input class="form-control" type="text" name="password">
+        <input class="form-control" type="text" name="password" required>
       </div>
       <div class="form-group">
         <label>Full Name</label>
-        <input class="form-control" type="text" name="name">
+        <input class="form-control" type="text" name="name" required>
       </div>
       <div class="form-group">
         <label>Date of Birth</label>
-        <input class="form-control" type="date" name="date">
+        <input class="form-control" type="date" name="date" required>
       </div>
       <button class="btn btn-info" type="submit" name="button">Create profile</button>
     </form>
@@ -39,11 +39,11 @@
       <h2>Sign in</h2>
       <div class="form-group">
         <label>Username</label>
-        <input class="form-control" type="text" name="login-username">
+        <input class="form-control" type="text" name="login-username" required>
       </div>
       <div class="form-group">
         <label>Password</label>
-        <input class="form-control" type="text" name="login-password">
+        <input class="form-control" type="text" name="login-password" required>
       </div>
       <button class="btn btn-info" type="submit" name="button">Sign in</button>
     </form>

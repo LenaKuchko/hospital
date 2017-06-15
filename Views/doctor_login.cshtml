@@ -8,26 +8,29 @@
     <form action="/doctors/new" method="post">
       <div class="form-group">
         <label>Username</label>
-        <input class="form-control" type="text" name="username">
+        <input class="form-control" type="text" name="username" required>
       </div>
       <div class="form-group">
         <label>Password</label>
-        <input class="form-control" type="text" name="password">
+        <input class="form-control" type="text" name="password" required>
       </div>
       <div class="form-group">
         <label>Full Name</label>
-        <input class="form-control" type="text" name="name">
+        <input class="form-control" type="text" name="name" required>
       </div>
       <div class="form-group">
         <label>Specialty</label>
-        <input class="form-control" type="text" name="specialty">
+        <input class="form-control" type="text" name="specialty" required>
       </div>
       <button class="btn btn-info" type="submit" name="button">Create profile</button>
     </form>
 
     @if(@Model != null)
     {
-      <h3>@Model["newDoctor"].Name, your account has been created!</h3>
+      @if(@Model.ContainsKey("newDoctor"))
+      {
+        <h3>@Model["newDoctor"].Name, your account has been created!</h3>
+      }
     }
 
   </div>
@@ -36,13 +39,21 @@
       <h2>Sign in</h2>
       <div class="form-group">
         <label>Username</label>
-        <input class="form-control" type="text" name="login-username">
+        <input class="form-control" type="text" name="login-username" required>
       </div>
       <div class="form-group">
         <label>Password</label>
-        <input class="form-control" type="text" name="login-password">
+        <input class="form-control" type="text" name="login-password" required>
       </div>
       <button class="btn btn-info" type="submit" name="button">Sign in</button>
     </form>
   </div>
+
+  @if(@Model != null)
+  {
+    @if(@Model.ContainsKey("login-status") && !(Model["login-status"]))
+    {
+      <h3>Invalid username or password</h3>
+    }
+  }
 </div>

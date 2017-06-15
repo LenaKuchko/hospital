@@ -60,7 +60,7 @@ namespace Hospital
         {
           model.Add("patient", loggedIn[0]);
           model.Add("appointments", loggedIn[0].GetAppointments());
-          model.Add("doctors", loggedIn[0].GetDoctors());
+          model.Add("patient-doctors", loggedIn[0].GetDoctors());
           return View["patient.cshtml", model];
         }
       };
@@ -68,7 +68,7 @@ namespace Hospital
         Dictionary<string, object> model = new Dictionary<string, object>{};
         List<Doctor> allDoctors = Doctor.GetAll();
         model.Add("patient-id", parameters.id);
-        model.Add("doctors", Patient.Find(parameters.id).GetDoctors());
+        model.Add("patient-doctors", Patient.Find(parameters.id).GetDoctors());
         return View["appointment_form.cshtml", model];
       };
       Post["/patients/{id}/appointments/added"] = parameters => {
@@ -77,7 +77,24 @@ namespace Hospital
         selectedPatient.CreateAppointment(Request.Form["date"], Doctor.Find(Request.Form["doctor"]), Request.Form["description"]);
         model.Add("patient", selectedPatient);
         model.Add("appointments", selectedPatient.GetAppointments());
-        model.Add("doctors", selectedPatient.GetDoctors());
+        model.Add("patient-doctors", selectedPatient.GetDoctors());
+        return View["patient.cshtml", model];
+      };
+      Get["/patients/{id}/doctors/choose"] = parameters => {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        List<Doctor> allDoctors = Doctor.GetAll();
+        model.Add("patient-id", parameters.id);
+        model.Add("patient-doctors", Patient.Find(parameters.id).GetDoctors());
+        model.Add("all-doctors", allDoctors);
+        return View["choose_doctor_form.cshtml", model];
+      };
+      Post["/patients/{id}/doctors/added"] = parameters => {
+        Dictionary<string, object> model = new Dictionary<string, object>{};
+        Patient selectedPatient = Patient.Find(parameters.id);
+        selectedPatient.AddDoctor(Doctor.Find(Request.Form["selected-doctor"]));
+        model.Add("patient", selectedPatient);
+        model.Add("appointments", selectedPatient.GetAppointments());
+        model.Add("patient-doctors", selectedPatient.GetDoctors());
         return View["patient.cshtml", model];
       };
     }
